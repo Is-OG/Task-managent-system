@@ -1,6 +1,3 @@
-CREATE DATABASE IF NOT EXISTS task_management
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
 
 USE task_management;
 
@@ -68,50 +65,19 @@ CREATE TABLE comments (
 ) ENGINE=InnoDB;
 
 -- Demo accounts
--- Admin: admin@example.com / admin123
--- Member: member@example.com / member123
+-- Admin: admin@gmail.com / admin123
+-- Member: member@gmail.com / member123
 
 INSERT INTO users (name, email, password, role) VALUES
 (
-    'System Admin',
-    'admin@example.com',
-    '$2y$12$5d3.mta0RtIZ2f17raEENeDhC9Y7689.lUrvsAtjcbT9CTJ8wfUSS',
+    'Admin User',
+    'admin@gmail.com',
+    'admin123',
     'admin'
 ),
 (
-    'Demo Member',
-    'member@example.com',
-    '$2y$12$66TQI4ttQivZHd/8VCnx4et1JqFiWlDf5HyX9/h56vWT1cl51Kbui',
+    'Team Member',
+    'member@gmail.com',
+    'member123',
     'member'
-);
-
-INSERT INTO projects (name, description, start_date, end_date)
-VALUES
-(
-    'Website Project',
-    'Sample project for testing the task management system.',
-    CURDATE(),
-    DATE_ADD(CURDATE(), INTERVAL 30 DAY)
-);
-
-INSERT INTO tasks
-(title, description, project_id, assigned_to, status, priority, due_date)
-VALUES
-(
-    'Create Login Page',
-    'Create and test the login page.',
-    1,
-    2,
-    'To-Do',
-    'High',
-    DATE_ADD(CURDATE(), INTERVAL 7 DAY)
-),
-(
-    'Create Dashboard',
-    'Build the member dashboard.',
-    1,
-    2,
-    'In Progress',
-    'Medium',
-    DATE_ADD(CURDATE(), INTERVAL 14 DAY)
 );
