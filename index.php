@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once "config/database.php";
 
 if (isset($_SESSION["user_id"])) {
@@ -20,7 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($email === "" || $password === "") {
         $error = "Please enter your email and password.";
     } else {
-        $stmt = $conn->prepare("SELECT id, name, email, password, role FROM users WHERE email = ? LIMIT 1");
+        $stmt = $conn->prepare(
+            "SELECT id, name, email, password, role
+             FROM users
+             WHERE email = ?
+             LIMIT 1"
+        );
+
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -28,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($result->num_rows === 1) {
             $user = $result->fetch_assoc();
 
-            if (password_verify($password, $user["password"])) {
+            if ($password === $user["password"]) {
                 session_regenerate_id(true);
 
                 $_SESSION["user_id"] = $user["id"];
@@ -41,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 } else {
                     header("Location: member/dashboard.php");
                 }
+
                 exit();
             }
         }
@@ -50,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,33 +68,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="icon" type="image/png" href="task.png">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body class="login-page">
 
 <div class="login-container">
+
     <h1>Task Management System</h1>
+
     <p class="login-subtitle">Sign in to continue</p>
 
     <?php if ($error): ?>
-        <div class="error-message"><?= htmlspecialchars($error) ?></div>
+        <div class="error-message">
+            <?= htmlspecialchars($error) ?>
+        </div>
     <?php endif; ?>
 
     <form method="POST" action="">
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-        </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    </div>
 
-        <button class="full-button" type="submit">Login</button>
-    </form>
-
-
+    <button class="full-button" type="submit">Login</button>
+</form>
 </div>
 
 <script src="js/script.js"></script>
+
 </body>
 </html>
